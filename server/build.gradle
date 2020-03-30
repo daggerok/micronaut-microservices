@@ -1,0 +1,66 @@
+plugins {
+  id "application"
+  id "net.ltgt.apt-eclipse" version "0.21"
+  id "io.franzbecker.gradle-lombok" version "3.2.0"
+  id "com.github.johnrengelman.shadow" version "5.2.0"
+}
+
+version "0.1"
+group "server"
+
+ext {
+  lombokVersion = "1.18.12"
+}
+
+repositories {
+  mavenCentral()
+  maven { url "https://jcenter.bintray.com" }
+}
+
+configurations {
+  // for dependencies that are needed for development only
+  developmentOnly
+}
+
+dependencies {
+  annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+  annotationProcessor "io.micronaut:micronaut-inject-java"
+  annotationProcessor "io.micronaut:micronaut-validation"
+  annotationProcessor "org.projectlombok:lombok:$lombokVersion"
+  implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+  implementation "io.micronaut:micronaut-http-client"
+  implementation "io.micronaut:micronaut-inject"
+  implementation "io.micronaut:micronaut-validation"
+  implementation "io.micronaut:micronaut-runtime"
+  implementation "org.apache.logging.log4j:log4j-core:2.12.1"
+  implementation "io.micronaut:micronaut-http-server-netty"
+  runtimeOnly "org.apache.logging.log4j:log4j-api:2.12.1"
+  runtimeOnly "org.apache.logging.log4j:log4j-slf4j-impl:2.12.1"
+  testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+  testAnnotationProcessor "io.micronaut:micronaut-inject-java"
+  testImplementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+  testImplementation "org.junit.jupiter:junit-jupiter-api"
+  testImplementation "io.micronaut.test:micronaut-test-junit5"
+  testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+}
+
+lombok.version = "$lombokVersion"
+mainClassName = "server.Application"
+test.classpath += configurations.developmentOnly
+
+test {
+  useJUnitPlatform()
+}
+
+shadowJar {
+  mergeServiceFiles()
+}
+
+tasks.withType(JavaExec) {
+  classpath += configurations.developmentOnly
+  jvmArgs('-noverify', '-XX:TieredStopAtLevel=1', '-Dcom.sun.management.jmxremote')
+}
+tasks.withType(JavaCompile) {
+  options.encoding = "UTF-8"
+  options.compilerArgs.add('-parameters')
+}

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="DEBUG">
+  <Properties>
+    <Property name="PID">%5X{pid}</Property>
+    <Property name="LOG_EXCEPTION_CONVERSION_WORD">%xEx</Property>
+    <Property name="LOG_LEVEL_PATTERN">%5p</Property>
+    <Property name="LOG_PATTERN">%style{%d{yyyy-MM-dd HH:mm:ss.SSS}}{dim} %highlight{${LOG_LEVEL_PATTERN}}
+      %style{---}{dim} %style{[%15.15t]}{yellow} %style{%-20.20c{1.}}{cyan} %style{%20.20M}{magenta} %style{:}{faint}
+      %m%n${sys:LOG_EXCEPTION_CONVERSION_WORD}
+    </Property>
+  </Properties>
+  <Appenders>
+    <Console name="ConsoleAppender" target="SYSTEM_OUT" follow="true">
+      <PatternLayout pattern="${LOG_PATTERN}"/>
+    </Console>
+  </Appenders>
+  <!--<Appenders>
+      <Console name="LogToConsole" target="SYSTEM_OUT">
+          <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+      </Console>
+  </Appenders>-->
+  <Loggers>
+    <Logger name="server" level="debug" additivity="false">
+      <AppenderRef ref="LogToConsole"/>
+    </Logger>
+    <Root level="error">
+      <AppenderRef ref="LogToConsole"/>
+    </Root>
+  </Loggers>
+</Configuration>

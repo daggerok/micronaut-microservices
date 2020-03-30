@@ -1,0 +1,28 @@
+1. install micronaut:
+
+  brew reinstall micronaut
+
+
+2. slaffold application services
+
+  mn create-federation -b gradle -x -s server -i -l java -f log4j2,junit,http-server,application server
+  mn create-federation -b gradle -x -s client -i -l java -f log4j2,junit,http-client,application client
+  mn create-federation -b gradle -x -s gw     -i -l java -f log4j2,junit,http-client,application gw
+
+
+3. implement and run system:
+
+  ./gradlew clean run -p server
+  ./gradlew clean run -p client
+  ./gradlew clean run -p gw
+
+
+4. test:
+
+  http http://127.0.0.1:8082/hello/Maksimko
+  http http://127.0.0.1:8081/greet/Passwordinko
+  http http://127.0.0.1:8080/server/ololo
+  http http://127.0.0.1:8080/client/trololo
+  http http://127.0.0.1:8080/
+
+quick intro: https://www.youtube.com/watch?v=OuuKup4AE_o
